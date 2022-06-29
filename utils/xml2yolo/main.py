@@ -57,6 +57,7 @@ if __name__ == '__main__':
     parser.add_argument("--image-extensions", type=str, help="image extensions to process", default="jpg")
     parser.add_argument("--width", type=int, help="width of the images", default=416)
     parser.add_argument("--height", type=int, help="height of the images", default=416)
+    parser.add_argument("--classname", type=str, help="classnames", default=parser.parse_known_args()[0].input_path.split(os.sep)[-3])
     
     images = glob.glob(os.path.join(parser.parse_known_args()[0].input_path, f"*.{parser.parse_known_args()[0].image_extensions}"))
     annotations = glob.glob(os.path.join(parser.parse_known_args()[0].input_path, f"*.xml"))
@@ -64,20 +65,22 @@ if __name__ == '__main__':
     images.sort()
     annotations.sort()
     
-    classname = parser.parse_known_args()[0].input_path.split(os.sep)[-2]
-    for image, annotation in zip(images[:parser.parse_known_args()[0].limit], annotations[:parser.parse_known_args()[0].limit]):
+    for image, annotation in tqdm(zip(images[:parser.parse_known_args()[0].limit], annotations[:parser.parse_known_args()[0].limit])):
         bboxes = return_bndboxes(annotation)
         
         print(image)
         print(annotation)
         txt = ""
         
-        for bbox in bboxes:
-            txt += "{{ "+str(classname)+" }} "
+        for bbox in tqdm(bboxes):
+            txt += "{{ "+parser.parse_known_args()[0].classname+" }} "
             txt += xml_to_yolo_bbox(bbox, parser.parse_known_args()[0].width, parser.parse_known_args()[0].height)
             txt += "\n"
         
-        shutil.copy(image, os.path.join(parser.parse_known_args()[0].output_path, os.path.basename(image)))
+        try:
+            shutil.copy(image, os.path.join(parser.parse_known_args()[0].output_path, os.path.basename(image)))
+        except shutil.SameFileError:
+            print(f"File {image} already exists")
         with open(os.path.join(parser.parse_known_args()[0].output_path, os.path.basename(annotation).replace(".xml", ".txt")), "w") as f:
             f.write(txt)
         

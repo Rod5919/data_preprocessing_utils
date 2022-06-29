@@ -80,7 +80,6 @@ def augmenting_images(images, xml_files):
     for image,bbs_file in tqdm(zip(images,xml_files)):
         bndboxes = []
         for i in return_bndboxes(filename=bbs_file):
-            print(i)
             bndboxes.append(BoundingBox(x1=i[0], y1=i[1], x2=i[2], y2=i[3]))
         bbs = BoundingBoxesOnImage(bndboxes, shape=image.shape)
         image_aug_aux, bbs_aug_aux = seq(image=image, bounding_boxes=bbs)
