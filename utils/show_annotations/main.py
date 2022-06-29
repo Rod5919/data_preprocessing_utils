@@ -57,7 +57,6 @@ if __name__ == '__main__':
     image_files.sort()
     annotations.sort()
     
-    print(parser.parse_known_args()[0].window_size)
     plt.rcParams["figure.figsize"] = parser.parse_known_args()[0].window_size
     
     for image_file, annotation, plt_index in zip(image_files, annotations, (331, 332, 333, 334, 335, 336, 337, 338, 339)):
