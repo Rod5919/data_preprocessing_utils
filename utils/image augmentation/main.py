@@ -117,7 +117,7 @@ def save_data(images_aug, xml_files, bbs_aug, parser):
         bbs_aug (list): bounding boxes after augmentation
         parser (parser): parser with the arguments
     """    
-    for i, (image_aug, xml_file, bbs) in tqdm(enumerate(zip(images_aug, xml_files, bbs_aug))):
+    for i, (image_aug, xml_file, bbs) in enumerate(zip(images_aug, xml_files, bbs_aug)):
         cv2.imwrite(os.path.join(parser.parse_known_args()[0].output_path, f"image{i}.jpg"),image_aug);
         writexmlfilewithnewbndboxes(xml_file, bbs, os.path.join(parser.parse_known_args()[0].output_path, f"image{i}.xml"))
         
