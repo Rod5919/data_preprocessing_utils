@@ -105,7 +105,11 @@ def writexmlfilewithnewbndboxes(xml_file, bbs_aug, output_path):
             bndbox.find('xmax').text = str(int(bbs.x2))
             bndbox.find('ymin').text = str(int(bbs.y1))
             bndbox.find('ymax').text = str(int(bbs.y2))
-    tree.write(output_path)
+    try:
+        tree.write(output_path)
+    except:
+        with open(output_path, 'w') as f:
+            f.write(tree.tostring(et, encoding='utf8', method='xml'))
     
 def save_data(images_aug, xml_files, bbs_aug, parser):
     """ Saves the augmented data.
