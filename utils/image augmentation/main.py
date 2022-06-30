@@ -98,6 +98,7 @@ def writexmlfilewithnewbndboxes(xml_file, bbs_aug, output_path):
     tree = ET.parse(xml_file)
     root = tree.getroot()
     print(bbs_aug)
+    print(bbs_aug.bounding_boxes)
     for obj,bbs in zip(root.iter('object'),bbs_aug):
         difficult = obj.find('difficult').text
         bndbox = obj.find('bndbox')
