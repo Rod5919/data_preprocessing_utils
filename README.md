@@ -25,6 +25,7 @@ python utils/show_annotations/main.py --input ./data/<classname>/<train, test or
 ~~~
 
 ## To download the COCO dataset
+
 [Official Documentation](https://voxel51.com/docs/fiftyone/integrations/coco.html#coco) and sample code...
 
 ~~~python
