@@ -2,6 +2,7 @@ import shutil
 import random
 import glob
 from tqdm import tqdm
+import argparse
 import os
 
 def folder_generator(folder_path):
@@ -11,16 +12,19 @@ def folder_generator(folder_path):
         yield image_path
         
 if __name__ == '__main__':
-    folders = [
-        "/home/rodri/Documents/data_preprocessing_utils/datasetv3/classes/Knifes",
-        "/home/rodri/Documents/data_preprocessing_utils/datasetv3/classes/Pistols",
-        "/home/rodri/Documents/data_preprocessing_utils/datasetv3/classes/People"
-    ]
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--folder_path', nargs='+', type=str, help='Path to the folder containing items')
+    parser.add_argument('--train_path', type=str, help='Path to the folder to save train items')
+    parser.add_argument('--test_path', type=str, help='Path to the folder to save test items')
+    parser.add_argument('--valid_path', type=str, help='Path to the folder to save valid items')
+    
+    folders = parser.parse_args().folder_path
+    
     for folder_path in folders:
         count = 0
-        train_path = "/home/rodri/Documents/data_preprocessing_utils/datasetv3/out/train"
-        test_path = "/home/rodri/Documents/data_preprocessing_utils/datasetv3/out/test"
-        valid_path = "/home/rodri/Documents/data_preprocessing_utils/datasetv3/out/valid"
+        train_path = parser.parse_args().train_path
+        test_path = parser.parse_args().test_path
+        valid_path = parser.parse_args().valid_path
         
         if not os.path.exists(train_path):
             os.makedirs(train_path)
