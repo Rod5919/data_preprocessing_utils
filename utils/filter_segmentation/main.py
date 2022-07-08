@@ -18,7 +18,7 @@ if __name__ == '__main__':
     [x.pop('segmentation') for x in data['annotations']]
     
     # Removing unwanted categories
-    data['annotations'] = [x for x in data['annotations'] if x['category_id'] == 1]
+    data['annotations'] = [x for x in data['annotations'] if x['category_id'] == 1 or x['category_id'] == 49]
 
     # Writing to JSON file
     with open(parser.parse_args().output, 'w') as f:

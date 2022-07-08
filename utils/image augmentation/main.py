@@ -23,14 +23,12 @@ def return_bndboxes(filename):
     root = tree.getroot()
     bndboxes = []
     for obj in root.iter('object'):
-        difficult = obj.find('difficult').text
-        if difficult == '0':
-            bndbox = obj.find('bndbox')
-            xmin = bndbox.find('xmin').text
-            ymin = bndbox.find('ymin').text
-            xmax = bndbox.find('xmax').text
-            ymax = bndbox.find('ymax').text
-            bndboxes.append((int(xmin), int(ymin), int(xmax), int(ymax)))
+        bndbox = obj.find('bndbox')
+        xmin = bndbox.find('xmin').text
+        ymin = bndbox.find('ymin').text
+        xmax = bndbox.find('xmax').text
+        ymax = bndbox.find('ymax').text
+        bndboxes.append((int(xmin), int(ymin), int(xmax), int(ymax)))
     return bndboxes
 
 ia.seed(1)
@@ -98,7 +96,7 @@ def writexmlfilewithnewbndboxes(xml_file, bbs_aug, output_path):
     tree = ET.parse(xml_file)
     root = tree.getroot()
     for obj,bbs in zip(root.iter('object'),bbs_aug.bounding_boxes):
-        difficult = obj.find('difficult').text
+        difficult = '0'
         bndbox = obj.find('bndbox')
         if difficult == '0':
             bndbox.find('xmin').text = str(int(bbs.x1))
@@ -121,9 +119,8 @@ def save_data(images_aug, xml_files, bbs_aug, parser):
         parser (parser): parser with the arguments
     """    
     for i, (image_aug, xml_file, bbs) in enumerate(zip(images_aug, xml_files, bbs_aug)):
-        cv2.imwrite(os.path.join(parser.parse_known_args()[0].output_path, f"image{i}.jpg"),image_aug);
-        writexmlfilewithnewbndboxes(xml_file, bbs, os.path.join(parser.parse_known_args()[0].output_path, f"image{i}.xml"))
-        
+        cv2.imwrite(os.path.join(parser.parse_known_args()[0].output_path, f"imagev{parser.parse_known_args()[0].version}_{i}.jpg"),image_aug);
+        writexmlfilewithnewbndboxes(xml_file, bbs, os.path.join(parser.parse_known_args()[0].output_path, f"imagev{parser.parse_known_args()[0].version}_{i}.xml"))
         
 if __name__ == '__main__':
     # Arguments
@@ -132,6 +129,7 @@ if __name__ == '__main__':
     parser.add_argument("-O","--output_path", type=str, help="path to output images", default="out")
     parser.add_argument("--limit", type=int, help="limit number of images to process", default=None)
     parser.add_argument("--image-extensions", type=str, help="image extensions to process", default="jpg")
+    parser.add_argument("--version", type=int, help="version", default=1)
     
     print("Getting image files...")
     image_files = [x for x in tqdm(glob.glob(os.path.join(parser.parse_known_args()[0].input_path,f"*.{parser.parse_known_args()[0].image_extensions}")))]
